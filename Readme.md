@@ -1,4 +1,4 @@
-This is practice folder for backend project folder setup.
+Backend using Mongoose, Express and Javascript
 
 
 
