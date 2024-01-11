@@ -1,0 +1,9 @@
+// get user detail from frontend
+    // validation on fields(eg not empty)
+    // check if user already exists(can check using email or username)
+    // check if avatar & coverImg present
+    // upload them to cloudinary, avatar
+    // create user object(create entry in db)
+    // remove password & refresh token field from response
+    // check for user creation
+    // return response
