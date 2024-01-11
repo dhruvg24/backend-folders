@@ -23,4 +23,13 @@ app.use(express.static("public"))
 // secure cookies(used by server only)
 app.use(cookieParser())
 
+// routes import: 
+import userRouter from './routes/user.routes.js'
+
+// routes declaration
+// middleware is required to use router
+app.use("/api/v1/users", userRouter)
+// after going to middleware-> userRouter
+// eg. http://localhost:3000/api/v1/users/{whatever written in userRouter}
+
 export {app}

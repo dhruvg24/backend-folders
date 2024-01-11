@@ -3,7 +3,8 @@
 
 // method 1: using promises:
 const asyncHandler = (requestHandler) => {
-    (req, res, next)=>{
+    // since its a higher order fn need to return the promise
+   return (req, res, next)=>{
         Promise.resolve(requestHandler(req,res, next)).catch((err)=>next(err))
     }
 }
