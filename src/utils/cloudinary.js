@@ -10,35 +10,54 @@ cloudinary.config({
 });
 
 // handling of file should be done inside try-catch blocks
-const uploadOnCloudinary = async(localFilePath) => {
-    // whichever method uses this will pass the file path
-    try {
-        if(!localFilePath){
-            return null;
-        }
-        // upload on cloudinary
-        const response = await cloudinary.uploader.upload(localFilePath, {
-            resource_type: "auto"
-        })
-        // file has been uploaded successfully
-        // console.log("file uploaded on cloudinary", response.url);
-
-        fs.unlinkSync(localFilePath)
-
-        return response;
-        // whole response sent
-    } catch (error) {
-        // we know that we have local file stored in server , but if we are in catch block that means file isnt uploaded on cloudinary
-        // so remove from server using unlink
-        fs.unlinkSync(localFilePath);
-        // using synchronised way -> should happen compulsorily
-
-        return null;
+const uploadOnCloudinary = async (localFilePath) => {
+  // whichever method uses this will pass the file path
+  try {
+    if (!localFilePath) {
+      return null;
     }
-}
+    // upload on cloudinary
+    const response = await cloudinary.uploader.upload(localFilePath, {
+      resource_type: "auto",
+    });
+    // file has been uploaded successfully
+    // console.log("file uploaded on cloudinary", response.url);
 
+    fs.unlinkSync(localFilePath);
 
-export {uploadOnCloudinary}
+    return response;
+    // whole response sent
+  } catch (error) {
+    // we know that we have local file stored in server , but if we are in catch block that means file isnt uploaded on cloudinary
+    // so remove from server using unlink
+    fs.unlinkSync(localFilePath);
+    // using synchronised way -> should happen compulsorily
+
+    return null;
+  }
+};
+
+const deleteOnCloudinary = async (remotePath) => {
+    // need to call await deleteOnCloudinary(req.user.avatar)
+  try {
+    if (!remotePath) {
+      return null;
+    }
+
+    const regex = /[\w\.\$]+(?=.png|.jpg|.gif)/;
+    let matches;
+
+    if ((matches = regex.exec(remotePath)) !== null) {
+      await cloudinary.uploader
+        .destroy(matches[0])
+        .then(result => console.log(result));
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { uploadOnCloudinary, deleteOnCloudinary };
 
 // cloudinary.v2.uploader.upload(
 //   "https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",

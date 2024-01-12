@@ -2,7 +2,7 @@
 
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { uploadOnCloudinary, deleteOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
 import jwt, { decode } from "jsonwebtoken";
@@ -337,6 +337,7 @@ const updateUserAvatar = asyncHandler(async (req, res)=> {
   }
 
   // need to delete old image - ASSIGNMENT
+  await deleteOnCloudinary(req.user.avatar)
 
   const avatar = await uploadOnCloudinary(avatarLocalPath)
 
@@ -365,7 +366,7 @@ const updateUserCoverImage = asyncHandler(async (req, res)=> {
   }
 
   // need to delete old image - ASSIGNMENT
-
+  await deleteOnCloudinary(req.user.coverImage)
   const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
   if(!coverImage.url){
