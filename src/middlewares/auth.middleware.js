@@ -36,7 +36,7 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
       throw new ApiError(401, "Invalid access token");
     }
 
-    // if we got user, we add in req
+    // if we got user, we add in req, this will help as we have complete user
     req.user = user;
     // this helps in logout func
 
