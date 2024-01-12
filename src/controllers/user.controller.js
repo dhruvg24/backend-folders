@@ -369,7 +369,14 @@ const updateUserCoverImage = asyncHandler(async (req, res)=> {
   }
 
   // need to delete old image - ASSIGNMENT
-  await deleteOnCloudinary(req.user.coverImage)
+  const updUser = await User.findById(req.user._id).select("-password -refreshToken")
+
+  if(updUser.coverImage){
+    const deleteSuccess = await deleteOnCloudinary(updUser.coverImage)
+    if(!deleteSuccess){
+      throw new ApiError(400, "Something went wrong while updating cover image");
+    }
+  }
   const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
   if(!coverImage.url){
