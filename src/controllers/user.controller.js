@@ -10,25 +10,26 @@ const registerUser = asyncHandler(async (req, res)=> {
     // if data coming from form/json can collect from req body
     const {fullName,email, username, password} = req.body
 
-    console.log("email: ", email);
+    // console.log("email: ", email);
 
     // validation
-    if(
-        [fullName, email,username,password].some((field)=>{field?.trim() === ""})
-    ){
+    if([fullName, email,username,password].some((field)=>{field?.trim() === ""}))
+    {
         throw new ApiError(400, "All fields are required!")
     }
 
     // check if user exist already
     // we imported the User from db
 
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         // $or helps in finding atleast one of the expression directly, it is a mongodb operator
         $or: [{username}, {email}]
     })
     if(existedUser){
         throw new ApiError(409, "User with email or username already exists")
     }
+
+    // console.log(req.files)
 
     // check images(avatar and coverImg)
     // multer gives access to files
@@ -37,7 +38,14 @@ const registerUser = asyncHandler(async (req, res)=> {
     const avatarLocalPath = req.files?.avatar[0]?.path;
     // [0] gives a property of object
 
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+    let coverImageLocalPath;
+    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
+
+
     if(!avatarLocalPath){
         throw new ApiError(400, "Avatar file is required")
     }
