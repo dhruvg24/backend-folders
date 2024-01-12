@@ -2,6 +2,7 @@
 
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
+import {extractPublicId} from "cloudinary-build-url"
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -37,23 +38,19 @@ const uploadOnCloudinary = async (localFilePath) => {
   }
 };
 
-const deleteOnCloudinary = async (remotePath) => {
+// not sure
+const deleteOnCloudinary = async (url) => {
     // need to call await deleteOnCloudinary(req.user.avatar)
+    const publicId = extractPublicId(url)
   try {
-    if (!remotePath) {
-      return null;
-    }
-
-    const regex = /[\w\.\$]+(?=.png|.jpg|.gif)/;
-    let matches;
-
-    if ((matches = regex.exec(remotePath)) !== null) {
-      await cloudinary.uploader
-        .destroy(matches[0])
-        .then(result => console.log(result));
-    }
+    const response = await cloudinary.uploader.destroy(publicId, {
+        resource_type: "image"
+    });
+    return response;
   } catch (error) {
-    throw error;
+    console.log("Error while deleting from cloudinary")
+    console.log(error);
+    return null;
   }
 };
 

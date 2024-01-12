@@ -335,9 +335,12 @@ const updateUserAvatar = asyncHandler(async (req, res)=> {
   if(!avatarLocalPath){
     throw new ApiError(400, "Avatar file missing")
   }
-
-  // need to delete old image - ASSIGNMENT
-  await deleteOnCloudinary(req.user.avatar)
+  const updUser = await User.findById(req.user._id).select("-password -refreshToken")
+  const deleteSuccess = await deleteOnCloudinary(req.updUser.avatar)
+  // maybe req.user.avatar required....
+  if(!deleteSuccess){
+    throw new ApiError(500, "Something went wrong while updating avatar image")
+  }
 
   const avatar = await uploadOnCloudinary(avatarLocalPath)
 
