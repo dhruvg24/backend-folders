@@ -2,7 +2,7 @@
 
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
-import {extractPublicId} from "cloudinary-build-url"
+import { extractPublicId } from "cloudinary-build-url";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -40,15 +40,15 @@ const uploadOnCloudinary = async (localFilePath) => {
 
 // not sure
 const deleteOnCloudinary = async (url) => {
-    // need to call await deleteOnCloudinary(req.user.avatar)
-    const publicId = extractPublicId(url)
+  // need to call await deleteOnCloudinary(req.user.avatar)
+  const publicId = extractPublicId(url);
   try {
     const response = await cloudinary.uploader.destroy(publicId, {
-        resource_type: "image"
+      resource_type: "image",
     });
     return response;
   } catch (error) {
-    console.log("Error while deleting from cloudinary")
+    console.log("Error while deleting from cloudinary");
     console.log(error);
     return null;
   }

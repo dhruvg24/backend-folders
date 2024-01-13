@@ -7,7 +7,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 
 export const verifyJWT = asyncHandler(async (req, _, next) => {
-    // since response res is not used instead of it we used _
+  // since response res is not used instead of it we used _
   try {
     // get token access
     // app has access of cookies -> in app.js we have cookieParser()
@@ -41,7 +41,6 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
     // this helps in logout func
 
     next();
-
   } catch (error) {
     throw new ApiError(401, error?.message || "Invalid access token");
   }
